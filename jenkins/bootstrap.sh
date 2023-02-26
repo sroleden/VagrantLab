@@ -27,3 +27,22 @@ sudo firewall-cmd --list-ports
 sudo firewall-cmd --list-services
 
 sudo firewall-cmd --reload
+
+
+sudo firewall-cmd --permanent --new-service=jenkins
+
+sudo firewall-cmd --permanent --service=jenkins --set-short="Jenkins Service Ports"
+
+sudo firewall-cmd --permanent --service=jenkins --set-description="Jenkins service firewalld port exceptions"
+
+sudo firewall-cmd --permanent --service=jenkins --add-port=8080/tcp
+sudo firewall-cmd --permanent --service=jenkins --add-port=40683/tcp
+
+sudo firewall-cmd --permanent --add-service=jenkins
+sudo firewall-cmd --permanent --add-service=telnet
+
+sudo firewall-cmd --zone=public --add-service=http --permanent
+
+sudo firewall-cmd --reload
+
+sudo firewall-cmd --list-all

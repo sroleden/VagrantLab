@@ -8,12 +8,17 @@ cluster = {
                 :cpus => 1, 
                 :mem => 1024, 
                 :ports => {80 => 8081, 8080 => 8082},
-                :path => "scripts/master_bootstrap.sh" },
-  "slave" => {  :ip => "192.168.33.11", 
+                :path => "scripts/bootstrap.sh" },
+  "slave1" => {  :ip => "192.168.33.11", 
                 :cpus => 1, 
                 :mem => 1024, 
                 :ports => {80 => 8091, 8080 => 8092},
-                :path => "scripts/slave_bootstrap.sh"  }
+                :path => "scripts/bootstrap.sh"  },
+  "slave2" => {  :ip => "192.168.33.12", 
+                :cpus => 1, 
+                :mem => 1024, 
+                :ports => {80 => 8071, 8080 => 8072},
+                :path => "scripts/bootstrap.sh"  }
 }
 
  
@@ -23,8 +28,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       cfg.vm.provider :virtualbox do |vb, override|
 
         config.vm.box = "centos/7"
-        config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
-        # config.vm.synced_folder "../data", "/vagrant_data"
+        config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/", rsync__auto: true
+        config.vm.synced_folder "../data", "/vagrant_data", type:"rsync", rsync__auto: true
         
         # config.vm.network "forwarded_port", guest: "#{info[:guest]}", host: "#{info[:host]}", auto_correct: true
     
@@ -37,7 +42,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.name = hostname
         vb.gui = false
         vb.customize ["modifyvm", :id, "--memory", info[:mem], "--cpus", info[:cpus], "--hwvirtex", "on"]
-        # config.vm.provision :shell, :path => "#{info[:path]}"
+        cfg.vm.provision :shell, :path => "#{info[:path]}"
       end # end provider
     end # end config
 
